@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Start</title>
+		<link rel="stylesheet" href="/normalize.css" />
+		<link rel="stylesheet" href="/main.css" />
+	</head>
+	<body>
+		<form action="javascript:submit()">
+			<p>Please enter your email and the code below.</p>
+			<input name="email" placeholder="Your Email" />
+			<span class="photo-code-container">
+				<input name="code" placeholder="Code" />
+				<img id="photo-code" />
+			</span>
+			<button>Continue</button>
+		</form>
+	</body>
+	<style>
+		form {
+			max-width: 20rem;
+			margin: 0 auto;
+		}
+		form > * {
+			margin-bottom: .5rem;
+		}
+		.photo-code-container {
+			display: grid;
+			grid-template-columns: 1fr 4rem;
+			column-gap: 1rem;
+		}
+		.photo-code-container img {
+			margin-top: .1rem;
+			padding: .35rem 0;
+			height: 1.5rem;
+			border-radius: .35rem;
+		}
+	</style>
+	<script>
+		requestPhotoCode()
+		
+		async function
+		requestPhotoCode() {
+			var location = "/service-create-photo-code"
+			var response = await fetch(location)
+			var detail   = await response.json()
+			var e = document.getElementById("photo-code")
+			e.src = "data:image/png;base64," + detail.photo
+		}
+		
+		async function
+		submit() {
+			var emailElement = document.querySelector("[name=email]")
+			var codeElement  = document.querySelector("[name=code]" )
+			
+			var payload = { }
+			payload.method = "POST"
+			payload.headers = { }
+			payload.headers["Content-Type"] = "application/json"
+			
+			var data = { }
+			data.email = emailElement.value
+			data.photoCode = codeElement.value
+			payload.body = JSON.stringify(data)
+			
+			var response = await fetch("/service-check-email", payload)
+			var detail   = await response.text()
+			console.log(detail)
+		}
+	</script>
+</html>
+
